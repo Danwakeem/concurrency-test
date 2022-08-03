@@ -1,7 +1,8 @@
+app: git-test-app
 org: danwakeemserverless
 service: concurrency-test
 configValidationMode: error
-dashboard: true
+# dashboard: true
 
 provider:
   name: aws
