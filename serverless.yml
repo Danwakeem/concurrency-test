@@ -1,0 +1,76 @@
+org: danwakeemserverless
+service: concurrency-test
+configValidationMode: error
+dashboard: true
+
+provider:
+  name: aws
+  versionFunctions: false
+  runtime: nodejs16.x
+  environment:
+    STAGE: ${sls:stage}
+  httpApi:
+    payload: '2.0'
+    cors:
+      allowedOrigins:
+        - '*'
+      allowedHeaders:
+        - '*'
+      allowedMethods:
+        - '*'
+      maxAge: 6000 # In seconds
+    disableDefaultEndpoint: false
+
+package:
+  individually: true
+  patterns:
+    - '!coverage/**'
+    - '!.serverless/**'
+    - '!src/**/*.test.js'
+    - '!src/**/*.snap'
+    - '!.*'
+    - '!.github/*'
+    - '!*.sh'
+    - '!env.sample'
+    - '!assets/**'
+    - '!package.json'
+    - '!yarn.lock'
+    - '!README.md'
+    - '!jest.config.js'
+    - 'collector.yml'
+
+functions:
+  throwError:
+    handler: index.throwError
+    events:
+      - httpApi:
+          path: /error
+          method: GET
+
+  fiveHundredError:
+    handler: index.fiveHundredError
+    events:
+      - httpApi:
+          path: /five/hundred
+          method: GET
+
+  timeoutError:
+    handler: index.timeoutError
+    events:
+      - httpApi:
+          path: /timeout
+          method: GET
+
+  success:
+    handler: index.success
+    events:
+      - httpApi:
+          path: /success
+          method: GET
+
+  successJSON:
+    handler: index.successJson
+    events:
+      - httpApi:
+          path: /success/json
+          method: GET
